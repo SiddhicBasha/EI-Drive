@@ -1,0 +1,65 @@
+// Mediator Pattern
+
+interface AirTrafficControlMediator {
+    void sendMessage(String message, Aircraft aircraft);
+    void addAircraft(Aircraft aircraft);
+}
+
+class AirTrafficControl implements AirTrafficControlMediator {
+    private List<Aircraft> aircrafts;
+
+    public AirTrafficControl() {
+        this.aircrafts = new ArrayList<>();
+    }
+
+    @Override
+    public void addAircraft(Aircraft aircraft) {
+        this.aircrafts.add(aircraft);
+    }
+
+    @Override
+    public void sendMessage(String message, Aircraft aircraft) {
+        for (Aircraft a : aircrafts) {
+            if (a != aircraft) {
+                a.receiveMessage(message);
+            }
+        }
+    }
+}
+
+class Aircraft {
+    private String id;
+    private AirTrafficControlMediator atcMediator;
+
+    public Aircraft(String id, AirTrafficControlMediator atcMediator) {
+        this.id = id;
+        this.atcMediator = atcMediator;
+        atcMediator.addAircraft(this);
+    }
+
+    public void sendMessage(String message) {
+        System.out.println("Aircraft " + id + " sending message: " + message);
+        atcMediator.sendMessage(message, this);
+    }
+
+    public void receiveMessage(String message) {
+        System.out.println("Aircraft " + id + " received message: " + message);
+    }
+
+    public String getId() {
+        return id;
+    }
+}
+
+public class MediatorPatternDemo {
+    public static void main(String[] args) {
+        AirTrafficControl atc = new AirTrafficControl();
+
+        Aircraft aircraft1 = new Aircraft("A1", atc);
+        Aircraft aircraft2 = new Aircraft("A2", atc);
+        Aircraft aircraft3 = new Aircraft("A3", atc);
+
+        aircraft1.sendMessage("Requesting permission to land.");
+        aircraft2.sendMessage("Requesting permission to take off.");
+    }
+}
