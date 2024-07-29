@@ -1,0 +1,32 @@
+// Adapter Pattern
+
+interface Shape {
+    void draw(int x, int y, int z, int j);
+}
+
+
+class LegacyRectangle {
+    public void draw(int x1, int y1, int x2, int y2) {
+        System.out.println("Drawing rectangle with coordinates: (" + x1 + "," + y1 + ") to (" + x2 + "," + y2 + ")");
+    }
+}
+
+class RectangleAdapter implements Shape {
+    private LegacyRectangle adaptee;
+
+    public RectangleAdapter(LegacyRectangle adaptee) {
+        this.adaptee = adaptee;
+    }
+
+    @Override
+    public void draw(int x, int y, int z, int j) {
+        adaptee.draw(x, y, z, j);
+    }
+}
+
+public class AdapterPatternDemo {
+    public static void main(String[] args) {
+        Shape rectangle = new RectangleAdapter(new LegacyRectangle());
+        rectangle.draw(10, 20, 30, 40);
+    }
+}
